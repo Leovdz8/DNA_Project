@@ -570,6 +570,101 @@ def is_valid_phone_number(phone):
         return False
     return True
 
+
+# update query
+def Update_Client(Client_Id , Name , DateOfBirth , Contact_Info_Email , Contact_Info_Phone):
+    global cursor
+    sql = "UPDATE Client SET Name = %s, DateOfBirth = %s, Contact_Info_Email = %s, Contact_Info_Phone = %s WHERE Client_Id = %s"
+    try:
+        cursor.execute(sql, (Name , DateOfBirth , Contact_Info_Email , Contact_Info_Phone , Client_Id))
+        connection.commit()
+    except pymysql.Error as e:
+        print(e)
+        return False
+    return True
+
+# Aggregate query
+def Best_Realtor(Agency_Id):
+    global cursor
+    sql = "SELECT r.Employee_Id Employee_Id, r.Name Name, r.DateOfBirth DOB, r.Contact_Info_Email Email, r.Contact_Info_Phone Phone, r.S_Realtor_Id Supervisor_Id, r.Start_Date Start_Date, r.Experience Experience FROM Realtor as r WHERE r.Agency_Id = %s and Experience = (SELECT MAX(Experience) FROM Realtor WHERE Agency_Id = %s)"
+
+    try:
+        cursor.execute(sql, (Agency_Id , Agency_Id))
+        connection.commit()
+        # Print the result
+        result = cursor.fetchall()
+        for row in result:
+            print(row)
+    except pymysql.Error as e:
+        print(e)
+        return False
+    return True
+
+# Agrregate query
+def Area_Under_Venture(License , PID , VID):
+    global cursor
+    sql = "SELECT SUM(Area) FROM Property JOIN Properties_Included as pi ON Property.PID = pi.PID WHERE pi.License = %s AND pi.VID = %s"
+
+    try:
+        cursor.execute(sql, (License , VID))
+        connection.commit()
+        # Print the result
+        result = cursor.fetchall()
+        for row in result:
+            print(row)
+    except pymysql.Error as e:
+        print(e)
+        return False
+    return True
+
+# Delete query
+def Delete_ClientDep(Client_Id , Dep_name):
+    global cursor
+    sql = "DELETE FROM Client_dependent WHERE Client_Id = %s AND Name = %s"
+    try:
+        cursor.execute(sql, (Client_Id , Dep_name))
+        connection.commit()
+    except pymysql.Error as e:
+        print(e)
+        return False
+    
+# Complex Query1 : # Give a code for this List those owners which have properties avergae land area > A
+def Analysis_Query1(A):
+    global cursor
+    sql = """
+    SELECT o.Owner_id, o.Name, AVG(p.Area) as Avg_Area
+    FROM Owner o
+    JOIN Property p ON o.Owner_id = p.Owner_id
+    GROUP BY o.Owner_id, o.Name
+    HAVING Avg_Area > %s
+    """
+    try:
+        cursor.execute(sql, (A))
+        connection.commit()
+        # Print the result
+        result = cursor.fetchall()
+        for row in result:
+            print(row)
+    except pymysql.Error as e:
+        print(e)
+        return False
+    return True
+
+def Analysis_Query2(P , S):
+    global cursor
+    sql_query = "SELECT Name , License , AVG(Revenue_incurred) AS Avg_rev FROM (Developer JOIN Project ON Developer.License = Project.License)  GROUP BY License HAVING No_of_projects > %s AND Avg_rev > %s"
+    try:
+        cursor.execute(sql_query , (P , S))
+        connection.commit()
+        result = cursor.fetchall()
+        for row in result:
+             print(tuple(map(str, row)))
+    except pymysql.Error as e:
+        print(e)
+        return False
+    return True
+
+
 def handle_client():
     while(1):
         print("What do you want to do?")
