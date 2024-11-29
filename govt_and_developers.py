@@ -312,3 +312,13 @@ def get_all_project_venture_details():
     
     except Exception as e:
         print("Error while retrieving project and venture details:", e)
+
+def view_projects(license):
+    query1 = "SELECT * FROM Project WHERE License = %s"
+    try:
+        cursor.execute(query1, (license))
+        result = cursor.fetchall()
+        for row in result:
+            print(row)
+    except Exception as e:  
+        print("Error while viewing projects:", e)

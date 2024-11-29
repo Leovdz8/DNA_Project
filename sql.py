@@ -1,4 +1,4 @@
-import pymysql as PyMySQL
+import pymysql
 
 # Connect to the database
 host = 'localhost'
@@ -6,7 +6,7 @@ user = 'root'
 password = 'qwerty@123'
 db = 'Real_Database'
 
-connection = PyMySQL.connect(host=host, user=user, password=password, db=db)
+connection = pymysql.connect(host=host, user=user, password=password, db=db)
 
 # Create a cursor object using the cursor() method
 cursor = connection.cursor()
@@ -20,7 +20,7 @@ def Add_To_Realtor_Agency(Agency_Id , Agency_Owner , Star_Rating , Email , Phone
     try:
         cursor.execute(sql, (Agency_Id , Agency_Owner , Star_Rating , Email , Phone))
         connection.commit()
-    except PyMySQL.Error as e:
+    except pymysql.Error as e:
         print(e)
         return False
     return True
@@ -36,7 +36,7 @@ def Add_To_Realtor(Agency_Id , Employee_Id , Name , DateOfBirth , Contact_Info_E
         cursor.execute(sql, (Agency_Id , Employee_Id , Name , DateOfBirth , Contact_Info_Email , Contact_Info_Phone , S_Realtor_Id , Start_Date , Experience))
         connection.commit()
 
-    except PyMySQL.Error as e:
+    except pymysql.Error as e:
         print(e)
         return False
     return True
@@ -52,7 +52,7 @@ def View_Agency_Related_Properties(Agency_Id):
         result = cursor.fetchall()
         for row in result:
             print(row)
-    except PyMySQL.Error as e:
+    except pymysql.Error as e:
         print(e)
         return False
     return True
@@ -70,7 +70,7 @@ def View_Agency_Related_Clients(Agency_Id):
             print(row)
             print("\n")
             view_dep(row[0])
-    except PyMySQL.Error as e:
+    except pymysql.Error as e:
         print(e)
         return False
     return True
@@ -86,7 +86,7 @@ def View_Agency_Related_Owners(Agency_Id):
         result = cursor.fetchall()
         for row in result:
             print(row)   
-    except PyMySQL.Error as e:
+    except pymysql.Error as e:
         print(e)
         return False
     return True
@@ -102,7 +102,7 @@ def View_Agency_Related_Realtors(Agency_Id):
         result = cursor.fetchall()
         for row in result:
             print(row)
-    except PyMySQL.Error as e:
+    except pymysql.Error as e:
         print(e)
         return False
     return True
@@ -118,7 +118,7 @@ def View_Agency_Related_Realtors_With_Experience(Agency_Id , Experience):
         result = cursor.fetchall()
         for row in result:
             print(row)
-    except PyMySQL.Error as e:
+    except pymysql.Error as e:
         print(e)
         return False
     return True
