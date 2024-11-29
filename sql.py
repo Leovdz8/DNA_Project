@@ -123,3 +123,48 @@ def View_Agency_Related_Realtors_With_Experience(Agency_Id , Experience):
         return False
     return True
 
+def Update_Client(Client_Id , Name , DateOfBirth , Contact_Info_Email , Contact_Info_Phone):
+    global cursor
+    sql = "UPDATE Client SET Name = %s, DateOfBirth = %s, Contact_Info_Email = %s, Contact_Info_Phone = %s WHERE Client_Id = %s"
+    try:
+        cursor.execute(sql, (Name , DateOfBirth , Contact_Info_Email , Contact_Info_Phone , Client_Id))
+        connection.commit()
+    except PyMySQL.Error as e:
+        print(e)
+        return False
+    return True
+
+
+def Best_Realtor(Agency_Id):
+    global cursor
+    sql = "SELECT r.Employee_Id Employee_Id, r.Name Name, r.DateOfBirth DOB, r.Contact_Info_Email Email, r.Contact_Info_Phone Phone, r.S_Realtor_Id Supervisor_Id, r.Start_Date Start_Date, r.Experience Experience FROM Realtor as r WHERE r.Agency_Id = %s and Experience = (SELECT MAX(Experience) FROM Realtor WHERE Agency_Id = %s)"
+
+    try:
+        cursor.execute(sql, (Agency_Id , Agency_Id))
+        connection.commit()
+        # Print the result
+        result = cursor.fetchall()
+        for row in result:
+            print(row)
+    except PyMySQL.Error as e:
+        print(e)
+        return False
+    return True
+
+def Area_Under_Venture(License , PID , VID):
+    global cursor
+    sql = "SELECT SUM(Area) FROM Property JOIN Properties_Included as pi ON Property.PID = pi.PID WHERE pi.License = %s AND pi.VID = %s"
+
+    try:
+        cursor.execute(sql, (License , VID))
+        connection.commit()
+        # Print the result
+        result = cursor.fetchall()
+        for row in result:
+            print(row)
+    except PyMySQL.Error as e:
+        print(e)
+        return False
+    return True
+
+
